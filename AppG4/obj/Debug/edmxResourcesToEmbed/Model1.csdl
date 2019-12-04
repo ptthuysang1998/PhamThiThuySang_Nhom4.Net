@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="QL_NhanvienModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Donvi">
+    <Key>
+      <PropertyRef Name="Madv" />
+    </Key>
+    <Property Name="Madv" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Tendv" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="NhanViens" Relationship="Self.FK_NhanVien_Donvi" FromRole="Donvi" ToRole="NhanVien" />
+  </EntityType>
+  <EntityType Name="MonHoc">
+    <Key>
+      <PropertyRef Name="idMonHoc" />
+    </Key>
+    <Property Name="idMonHoc" Type="Int32" Nullable="false" />
+    <Property Name="TenMonHoc" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="idNhomMonHoc" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="NhomMonHoc" Relationship="Self.FK_MonHoc_NhomMonHoc" FromRole="MonHoc" ToRole="NhomMonHoc" />
+    <NavigationProperty Name="QuaTrinhHocTaps" Relationship="Self.FK_QuaTrinhHocTap_MonHoc" FromRole="MonHoc" ToRole="QuaTrinhHocTap" />
+  </EntityType>
+  <EntityType Name="NhanVien">
+    <Key>
+      <PropertyRef Name="Manv" />
+    </Key>
+    <Property Name="Manv" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="hoten" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="gioitinh" Type="Boolean" />
+    <Property Name="ngaysinh" Type="DateTime" Precision="0" />
+    <Property Name="hsl" Type="Double" />
+    <Property Name="madv" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Donvi" Relationship="Self.FK_NhanVien_Donvi" FromRole="NhanVien" ToRole="Donvi" />
+  </EntityType>
+  <EntityType Name="NhomMonHoc">
+    <Key>
+      <PropertyRef Name="idNhomMonHoc" />
+    </Key>
+    <Property Name="idNhomMonHoc" Type="Int32" Nullable="false" />
+    <Property Name="TenNhomMonHoc" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="MonHocs" Relationship="Self.FK_MonHoc_NhomMonHoc" FromRole="NhomMonHoc" ToRole="MonHoc" />
+  </EntityType>
+  <EntityType Name="QuaTrinhHocTap">
+    <Key>
+      <PropertyRef Name="idSinhVien" />
+      <PropertyRef Name="idMonHoc" />
+    </Key>
+    <Property Name="idSinhVien" Type="Int32" Nullable="false" />
+    <Property Name="idMonHoc" Type="Int32" Nullable="false" />
+    <Property Name="Diem" Type="Int32" />
+    <NavigationProperty Name="MonHoc" Relationship="Self.FK_QuaTrinhHocTap_MonHoc" FromRole="QuaTrinhHocTap" ToRole="MonHoc" />
+    <NavigationProperty Name="SinhVien" Relationship="Self.FK_QuaTrinhHocTap_SinhVien" FromRole="QuaTrinhHocTap" ToRole="SinhVien" />
+  </EntityType>
+  <EntityType Name="SinhVien">
+    <Key>
+      <PropertyRef Name="idSinhVien" />
+    </Key>
+    <Property Name="idSinhVien" Type="Int32" Nullable="false" />
+    <Property Name="HoTen" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="NgaySinh" Type="DateTime" Precision="0" />
+    <Property Name="GioiTinh" Type="Boolean" />
+    <NavigationProperty Name="QuaTrinhHocTaps" Relationship="Self.FK_QuaTrinhHocTap_SinhVien" FromRole="SinhVien" ToRole="QuaTrinhHocTap" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_NhanVien_Donvi">
+    <End Role="Donvi" Type="Self.Donvi" Multiplicity="0..1" />
+    <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Donvi">
+        <PropertyRef Name="Madv" />
+      </Principal>
+      <Dependent Role="NhanVien">
+        <PropertyRef Name="madv" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MonHoc_NhomMonHoc">
+    <End Role="NhomMonHoc" Type="Self.NhomMonHoc" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="MonHoc" Type="Self.MonHoc" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NhomMonHoc">
+        <PropertyRef Name="idNhomMonHoc" />
+      </Principal>
+      <Dependent Role="MonHoc">
+        <PropertyRef Name="idNhomMonHoc" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_QuaTrinhHocTap_MonHoc">
+    <End Role="MonHoc" Type="Self.MonHoc" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="QuaTrinhHocTap" Type="Self.QuaTrinhHocTap" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MonHoc">
+        <PropertyRef Name="idMonHoc" />
+      </Principal>
+      <Dependent Role="QuaTrinhHocTap">
+        <PropertyRef Name="idMonHoc" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_QuaTrinhHocTap_SinhVien">
+    <End Role="SinhVien" Type="Self.SinhVien" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="QuaTrinhHocTap" Type="Self.QuaTrinhHocTap" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SinhVien">
+        <PropertyRef Name="idSinhVien" />
+      </Principal>
+      <Dependent Role="QuaTrinhHocTap">
+        <PropertyRef Name="idSinhVien" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="QL_NhanvienEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Donvis" EntityType="Self.Donvi" />
+    <EntitySet Name="MonHocs" EntityType="Self.MonHoc" />
+    <EntitySet Name="NhanViens" EntityType="Self.NhanVien" />
+    <EntitySet Name="NhomMonHocs" EntityType="Self.NhomMonHoc" />
+    <EntitySet Name="QuaTrinhHocTaps" EntityType="Self.QuaTrinhHocTap" />
+    <EntitySet Name="SinhViens" EntityType="Self.SinhVien" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <AssociationSet Name="FK_NhanVien_Donvi" Association="Self.FK_NhanVien_Donvi">
+      <End Role="Donvi" EntitySet="Donvis" />
+      <End Role="NhanVien" EntitySet="NhanViens" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MonHoc_NhomMonHoc" Association="Self.FK_MonHoc_NhomMonHoc">
+      <End Role="NhomMonHoc" EntitySet="NhomMonHocs" />
+      <End Role="MonHoc" EntitySet="MonHocs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_QuaTrinhHocTap_MonHoc" Association="Self.FK_QuaTrinhHocTap_MonHoc">
+      <End Role="MonHoc" EntitySet="MonHocs" />
+      <End Role="QuaTrinhHocTap" EntitySet="QuaTrinhHocTaps" />
+    </AssociationSet>
+    <AssociationSet Name="FK_QuaTrinhHocTap_SinhVien" Association="Self.FK_QuaTrinhHocTap_SinhVien">
+      <End Role="SinhVien" EntitySet="SinhViens" />
+      <End Role="QuaTrinhHocTap" EntitySet="QuaTrinhHocTaps" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
